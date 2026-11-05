@@ -190,6 +190,12 @@ function ajouterOutilsCreatifs() {
   ];
   const conteneurs = new Set();
   const preparerBadges = () => {
+    for (const element of [...listeOutils.children]) {
+      if (element.textContent.trim() === "n8n") {
+        element.remove();
+      }
+    }
+
     for (const [index, outil] of outilsCreatifs.entries()) {
       const element = trouverElementOutil(outil.nom);
       if (!element) {
