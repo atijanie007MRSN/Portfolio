@@ -79,10 +79,17 @@ function surveillerGrandsTitres() {
     const fin = hauteurVue * 0.2;
 
     for (const titre of titres) {
-      const haut = titre.getBoundingClientRect().top;
       const progression = preferenceMouvement.matches
         ? 1
-        : Math.max(0, Math.min(1, (debut - haut) / (debut - fin)));
+        : Math.max(
+            0,
+            Math.min(
+              1,
+              titre.tagName === "H1"
+                ? window.scrollY / (hauteurVue * 0.62)
+                : (debut - titre.getBoundingClientRect().top) / (debut - fin),
+            ),
+          );
       titre.style.setProperty("--titre-progression", `${progression * 100}%`);
     }
   };
