@@ -1,0 +1,230 @@
+html,
+body,
+#root,
+#root * {
+  font-family: "Sora", sans-serif !important;
+  font-optical-sizing: auto;
+  font-variation-settings: normal;
+}
+
+video {
+  object-fit: cover !important;
+}
+
+nav a[href="#hero"] span {
+  color: #fff !important;
+}
+
+div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(n + 2) > span:first-child {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: transparent;
+  font-size: 0;
+}
+
+div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(n + 2) > span:first-child::before {
+  width: 18px;
+  height: 18px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  content: "";
+}
+
+div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(2) > span:first-child::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m2 9 10-6 10 6-10 6L2 9Z'/%3E%3Cpath d='M6 11.4V16c3.5 2.7 8.5 2.7 12 0v-4.6M22 9v6'/%3E%3C/svg%3E");
+}
+
+div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(3) > span:first-child::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='7' width='18' height='14' rx='2'/%3E%3Cpath d='M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2'/%3E%3C/svg%3E");
+}
+
+div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(4) > span:first-child::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z'/%3E%3Ccircle cx='12' cy='10' r='2.5'/%3E%3C/svg%3E");
+}
+
+div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z'/%3E%3Cpath d='M8 7h8M8 11h8'/%3E%3C/svg%3E");
+}
+
+#services .text-4xl.mb-4 {
+  display: block;
+  width: 44px;
+  height: 44px;
+  color: transparent;
+  font-size: 0;
+  line-height: 1;
+}
+
+#services .text-4xl.mb-4::before {
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  content: "";
+  animation: icone-service-flottante 3s ease-in-out infinite;
+}
+
+#services .text-4xl.mb-4:nth-child(1)::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m29 7 12 12M26 10 8 28l-3 15 15-3 18-18M8 28l12 12M24 12l12 12'/%3E%3Cpath d='m30 8 4-4a3 3 0 0 1 4 0l6 6a3 3 0 0 1 0 4l-4 4'/%3E%3C/svg%3E");
+}
+
+#services .grid > div:nth-child(2) .text-4xl.mb-4::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='11' width='27' height='26' rx='4'/%3E%3Cpath d='m31 19 12-7v24l-12-7'/%3E%3Cpath d='m15 19 9 5-9 5z'/%3E%3C/svg%3E");
+  animation-delay: 0.35s;
+}
+
+#services .grid > div:nth-child(3) .text-4xl.mb-4::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 22v8h8l21 10V12L13 22H5Z'/%3E%3Cpath d='m13 30 4 11h9l-5-8M40 20l4-4M41 26h5M40 32l4 4'/%3E%3C/svg%3E");
+  animation-delay: 0.7s;
+}
+
+@keyframes icone-service-flottante {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #services .text-4xl.mb-4::before {
+    animation: none;
+  }
+}
+
+#portfolio article:has(img[alt="Aperçu du projet Identité Visuelle Radio UGB"]) > div:first-child {
+  background: #000 !important;
+}
+
+#portfolio article:has(img[alt="Aperçu du projet Identité Visuelle Radio UGB"]) img {
+  object-fit: contain !important;
+  padding: 5px 0;
+  animation: logo-radio-flottant 4s ease-in-out infinite;
+}
+
+@keyframes logo-radio-flottant {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #portfolio article:has(img[alt="Aperçu du projet Identité Visuelle Radio UGB"]) img {
+    animation: none;
+  }
+}
+
+#portfolio article:has(video[data-apercu="semaine-pro"]) > div:first-child {
+  background: #000 !important;
+}
+
+#portfolio video.apercu-video-semaine-pro {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dclic-badges-section {
+  padding: 1rem 0 3rem;
+}
+
+.dclic-badges-content {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.dclic-badges-title {
+  margin: 0;
+  color: #edeff5;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.dclic-badges-description {
+  margin: 0.4rem 0 1rem;
+  color: rgb(237 239 245 / 65%);
+  font-size: 0.8rem;
+}
+
+.dclic-badges-track {
+  display: flex;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.dclic-badges-track::-webkit-scrollbar {
+  display: none;
+}
+
+.dclic-badges-track:active {
+  cursor: grabbing;
+}
+
+.dclic-badges-track:focus-visible {
+  border-radius: 0.5rem;
+  outline: 2px solid #8ecae6;
+  outline-offset: 3px;
+}
+
+.dclic-badge {
+  position: relative;
+  display: flex;
+  flex: 0 0 5.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.5rem;
+  opacity: 0.48;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.dclic-badge:not(:last-child)::after {
+  position: absolute;
+  top: 20%;
+  right: 0;
+  bottom: 20%;
+  width: 1px;
+  background: linear-gradient(transparent, rgb(237 239 245 / 28%), transparent);
+  content: "";
+}
+
+.dclic-badge img {
+  display: block;
+  width: 4.5rem;
+  height: 4.5rem;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.dclic-badge:hover,
+.dclic-badge:focus-visible {
+  opacity: 0.92;
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dclic-badge {
+    transition: none;
+  }
+}

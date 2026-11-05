@@ -1,0 +1,6 @@
+.playwright-mcp/
+.netlify/
+authorize.json
+site-netlify-a-deposer/
+.DS_Store
+Thumbs.db
