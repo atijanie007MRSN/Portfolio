@@ -53,6 +53,10 @@ video {
   animation-delay: -1.8s;
 }
 
+.outil-creatif-conteneur:nth-child(7) {
+  animation-delay: -3.8s;
+}
+
 .outil-constellation-noeud {
   position: relative;
   z-index: 1;

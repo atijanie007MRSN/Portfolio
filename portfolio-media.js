@@ -147,6 +147,7 @@ const outilsCreatifs = [
   { nom: "Premiere Pro", fichier: "premiere-pro.png" },
   { nom: "After Effects", fichier: "adobe-after-effects-cc-icon-4632 - Copie.png" },
   { nom: "DaVinci Resolve", fichier: "davinci_resolve_macos_bigsur_icon_190261.png" },
+  { nom: "Figma", fichier: "figma.svg" },
 ];
 
 function ajouterOutilsCreatifs() {
@@ -185,6 +186,7 @@ function ajouterOutilsCreatifs() {
     "outil-icone-bas-gauche",
     "outil-icone-bas-droite",
     "outil-icone-bas-droite",
+    "outil-icone-bas-gauche",
   ];
   const conteneurs = new Set();
   const preparerBadges = () => {
