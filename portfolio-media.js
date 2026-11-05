@@ -157,93 +157,96 @@ function ajouterOutilsCreatifs() {
   }
 
   listeOutils.classList.add("outils-constellation");
-  const etiquettePhotoshop = [...listeOutils.children].find(
-    (element) => element.textContent.includes("Photoshop"),
-  );
-  const etiquetteIllustrator = [...listeOutils.children].find(
-    (element) => element.textContent.includes("Illustrator"),
-  );
-  if (
-    etiquettePhotoshop &&
-    etiquetteIllustrator &&
-    ![...listeOutils.children].some((element) => element.textContent.includes("InDesign"))
-  ) {
-    const badgeSource = etiquettePhotoshop.classList.contains("outil-creatif-conteneur")
-      ? etiquettePhotoshop.querySelector(".outil-creatif")
-      : etiquettePhotoshop;
-    const etiquetteInDesign = badgeSource.cloneNode(false);
-    etiquetteInDesign.textContent = "InDesign";
-    delete etiquetteInDesign.dataset.outilCreatif;
-    etiquetteInDesign.classList.remove(
-      "outil-creatif",
-      "outil-creatif-conteneur",
-      "outil-constellation-noeud",
+  listeOutils.querySelector(":scope > .outils-constellation-liens")?.remove();
+
+  const trouverElementOutil = (nom) =>
+    [...listeOutils.children].find(
+      (element) => element.dataset.outilCreatif === nom || element.textContent.trim() === nom,
     );
-    etiquetteInDesign.style.removeProperty("opacity");
-    etiquetteInDesign.style.removeProperty("transform");
-    etiquetteInDesign.style.removeProperty("--outil-progression");
-    etiquetteIllustrator.after(etiquetteInDesign);
+  if (!trouverElementOutil("InDesign")) {
+    const photoshop = trouverElementOutil("Photoshop");
+    const illustrator = trouverElementOutil("Illustrator");
+    const badgeSource = photoshop?.querySelector(".outil-creatif") ?? photoshop;
+    if (badgeSource && illustrator) {
+      const etiquetteInDesign = badgeSource.cloneNode(false);
+      etiquetteInDesign.textContent = "InDesign";
+      etiquetteInDesign.removeAttribute("data-outil-creatif");
+      etiquetteInDesign.classList.remove("outil-creatif", "outil-constellation-noeud");
+      etiquetteInDesign.style.removeProperty("opacity");
+      etiquetteInDesign.style.removeProperty("transform");
+      illustrator.after(etiquetteInDesign);
+    }
   }
 
-  const svgLiens =
-    listeOutils.querySelector(":scope > .outils-constellation-liens") ??
-    document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svgLiens.classList.add("outils-constellation-liens");
-  svgLiens.setAttribute("aria-hidden", "true");
-  if (!svgLiens.isConnected) {
-    listeOutils.prepend(svgLiens);
-  }
+  const positionsIcones = [
+    "outil-icone-haut-gauche",
+    "outil-icone-haut-gauche",
+    "outil-icone-haut-droite",
+    "outil-icone-bas-gauche",
+    "outil-icone-bas-droite",
+    "outil-icone-bas-droite",
+  ];
+  const conteneurs = new Set();
+  const preparerBadges = () => {
+    for (const [index, outil] of outilsCreatifs.entries()) {
+      const element = trouverElementOutil(outil.nom);
+      if (!element) {
+        continue;
+      }
 
-  const trouverBadge = (nom) => {
-    const element = [...listeOutils.children].find(
-      (enfant) => enfant !== svgLiens && enfant.dataset.outilCreatif === nom,
-    ) ?? [...listeOutils.children].find(
-      (enfant) => enfant !== svgLiens && enfant.textContent.trim() === nom,
-    );
-    return element?.classList.contains("outil-creatif-conteneur")
-      ? element.querySelector(".outil-creatif")
-      : element;
+      const conteneur = element.classList.contains("outil-creatif-conteneur")
+        ? element
+        : null;
+      const badge = conteneur?.querySelector(".outil-creatif") ?? element;
+      if (!badge.dataset.outilCreatif) {
+        const libelle = document.createElement("span");
+        libelle.className = "outil-creatif-libelle";
+        libelle.textContent = outil.nom;
+        badge.replaceChildren(libelle);
+        badge.dataset.outilCreatif = outil.nom;
+      }
+
+      let icone = conteneur?.querySelector(".outil-creatif-icone") ??
+        badge.querySelector(".outil-creatif-icone");
+      if (!icone) {
+        icone = document.createElement("img");
+        icone.className = "outil-creatif-icone";
+        icone.src = `/${encodeURIComponent(outil.fichier)}`;
+        icone.alt = "";
+        icone.setAttribute("aria-hidden", "true");
+        icone.draggable = false;
+        icone.addEventListener("error", () => {
+          console.error(`Impossible de charger l’icône de ${outil.nom} : ${outil.fichier}`);
+        });
+      }
+
+      badge.classList.add("outil-creatif", "outil-constellation-noeud");
+      if (badge.parentElement !== conteneur) {
+        const nouveauConteneur = document.createElement("span");
+        nouveauConteneur.className = "outil-creatif-conteneur";
+        nouveauConteneur.dataset.outilCreatif = outil.nom;
+        nouveauConteneur.classList.add(positionsIcones[index]);
+        nouveauConteneur.style.setProperty("--outil-progression", "0");
+        badge.before(nouveauConteneur);
+        nouveauConteneur.append(icone, badge);
+        conteneurs.add(nouveauConteneur);
+      } else {
+        conteneur.classList.add(positionsIcones[index]);
+        conteneur.style.setProperty("--outil-progression", "0");
+        if (icone.parentElement !== conteneur) {
+          conteneur.prepend(icone);
+        }
+        conteneurs.add(conteneur);
+      }
+    }
+
+    for (const element of listeOutils.children) {
+      if (!element.classList.contains("outil-creatif-conteneur")) {
+        element.classList.add("outil-constellation-noeud");
+      }
+    }
   };
-
-  for (const outil of outilsCreatifs) {
-    const badge = trouverBadge(outil.nom);
-    if (!badge) {
-      continue;
-    }
-
-    if (!badge.dataset.outilCreatif) {
-      const icone = document.createElement("img");
-      icone.className = "outil-creatif-icone";
-      icone.src = `/${encodeURIComponent(outil.fichier)}`;
-      icone.alt = "";
-      icone.setAttribute("aria-hidden", "true");
-      icone.draggable = false;
-      icone.addEventListener("error", () => {
-        console.error(`Impossible de charger l’icône de ${outil.nom} : ${outil.fichier}`);
-      });
-
-      const libelle = document.createElement("span");
-      libelle.className = "outil-creatif-libelle";
-      libelle.textContent = outil.nom;
-      badge.replaceChildren(icone, libelle);
-      badge.dataset.outilCreatif = outil.nom;
-    }
-
-    if (badge.parentElement?.classList.contains("outil-creatif-conteneur")) {
-      badge.parentElement.replaceWith(badge);
-    }
-  }
-
-  const badgesOutils = new Set(
-    [...listeOutils.children].filter((element) => element !== svgLiens),
-  );
-  for (const badge of badgesOutils) {
-    badge.classList.add("outil-constellation-noeud");
-    if (badge.dataset.outilCreatif) {
-      badge.classList.add("outil-creatif");
-    }
-    badge.style.setProperty("--outil-progression", "0");
-  }
+  preparerBadges();
 
   const preferenceMouvement = window.matchMedia("(prefers-reduced-motion: reduce)");
   let miseAJourEnAttente = false;
@@ -253,18 +256,18 @@ function ajouterOutilsCreatifs() {
     const debut = hauteurVue * 0.84;
     const fin = hauteurVue * 0.5;
 
-    for (const badge of badgesOutils) {
-      if (!badge.isConnected) {
-        badgesOutils.delete(badge);
+    for (const conteneur of conteneurs) {
+      if (!conteneur.isConnected) {
+        conteneurs.delete(conteneur);
         continue;
       }
 
-      const boite = badge.getBoundingClientRect();
+      const boite = conteneur.querySelector(".outil-creatif").getBoundingClientRect();
       const centre = boite.top + boite.height / 2;
       const progression = preferenceMouvement.matches
         ? 1
         : Math.max(0, Math.min(1, (debut - centre) / (debut - fin)));
-      badge.style.setProperty("--outil-progression", progression);
+      conteneur.style.setProperty("--outil-progression", progression);
     }
   };
   const programmerMiseAJour = () => {
@@ -276,130 +279,14 @@ function ajouterOutilsCreatifs() {
     window.requestAnimationFrame(mettreAJourProgression);
   };
 
-  const dessinerLiens = () => {
-    const noeuds = [...badgesOutils].filter((badge) => badge.isConnected);
-    const rectangleListe = listeOutils.getBoundingClientRect();
-    const largeur = listeOutils.clientWidth;
-    const hauteur = listeOutils.clientHeight;
-    svgLiens.setAttribute("viewBox", `0 0 ${largeur} ${hauteur}`);
-    svgLiens.replaceChildren();
-
-    const lignes = [];
-    for (const noeud of noeuds) {
-      const boite = noeud.getBoundingClientRect();
-      const centreY = boite.top + boite.height / 2;
-      let ligne = lignes.find((groupe) => Math.abs(groupe.centreY - centreY) < boite.height * 0.45);
-      if (!ligne) {
-        ligne = { centreY, noeuds: [] };
-        lignes.push(ligne);
-      }
-      ligne.noeuds.push(noeud);
-    }
-    lignes.sort((a, b) => a.centreY - b.centreY);
-
-    const liens = new Set();
-    const ajouterLien = (a, b) => {
-      if (a === b) {
-        return;
-      }
-      const paire = [a, b].sort((x, y) => noeuds.indexOf(x) - noeuds.indexOf(y));
-      const cle = `${noeuds.indexOf(paire[0])}:${noeuds.indexOf(paire[1])}`;
-      if (!liens.has(cle)) {
-        liens.add(cle);
-        dessinerLien(a, b);
-      }
-    };
-
-    for (const ligne of lignes) {
-      ligne.noeuds.sort((a, b) => a.getBoundingClientRect().left - b.getBoundingClientRect().left);
-      for (let index = 0; index < ligne.noeuds.length - 1; index += 1) {
-        ajouterLien(ligne.noeuds[index], ligne.noeuds[index + 1]);
-      }
-    }
-
-    for (let index = 0; index < lignes.length - 1; index += 1) {
-      const ligneHaut = lignes[index].noeuds;
-      const ligneBas = lignes[index + 1].noeuds;
-      for (const noeud of ligneHaut) {
-        const centre = noeud.getBoundingClientRect().left + noeud.getBoundingClientRect().width / 2;
-        const voisin = ligneBas.reduce((proche, candidat) => {
-          const x = candidat.getBoundingClientRect().left + candidat.getBoundingClientRect().width / 2;
-          const procheX = proche.getBoundingClientRect().left + proche.getBoundingClientRect().width / 2;
-          return Math.abs(x - centre) < Math.abs(procheX - centre) ? candidat : proche;
-        }, ligneBas[0]);
-        ajouterLien(noeud, voisin);
-      }
-      for (const noeud of ligneBas) {
-        const centre = noeud.getBoundingClientRect().left + noeud.getBoundingClientRect().width / 2;
-        const voisin = ligneHaut.reduce((proche, candidat) => {
-          const x = candidat.getBoundingClientRect().left + candidat.getBoundingClientRect().width / 2;
-          const procheX = proche.getBoundingClientRect().left + proche.getBoundingClientRect().width / 2;
-          return Math.abs(x - centre) < Math.abs(procheX - centre) ? candidat : proche;
-        }, ligneHaut[0]);
-        ajouterLien(voisin, noeud);
-      }
-    }
-
-    function dessinerLien(a, b) {
-      const rectA = a.getBoundingClientRect();
-      const rectB = b.getBoundingClientRect();
-      const ax = rectA.left + rectA.width / 2 - rectangleListe.left;
-      const ay = rectA.top + rectA.height / 2 - rectangleListe.top;
-      const bx = rectB.left + rectB.width / 2 - rectangleListe.left;
-      const by = rectB.top + rectB.height / 2 - rectangleListe.top;
-      const dx = bx - ax;
-      const dy = by - ay;
-      const ta = Math.min(
-        dx === 0 ? Infinity : (rectA.width / 2) / Math.abs(dx),
-        dy === 0 ? Infinity : (rectA.height / 2) / Math.abs(dy),
-      );
-      const tb = Math.min(
-        dx === 0 ? Infinity : (rectB.width / 2) / Math.abs(dx),
-        dy === 0 ? Infinity : (rectB.height / 2) / Math.abs(dy),
-      );
-      const x1 = ax + dx * ta;
-      const y1 = ay + dy * ta;
-      const x2 = bx - dx * tb;
-      const y2 = by - dy * tb;
-      const groupe = document.createElementNS("http://www.w3.org/2000/svg", "g");
-      const chemin = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      chemin.setAttribute("d", `M ${x1} ${y1} L ${x2} ${y2}`);
-      groupe.append(chemin);
-      for (const [x, y] of [[x1, y1], [x2, y2]]) {
-        const point = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        point.setAttribute("x", `${x - 2}`);
-        point.setAttribute("y", `${y - 2}`);
-        point.setAttribute("width", "4");
-        point.setAttribute("height", "4");
-        groupe.append(point);
-      }
-      svgLiens.append(groupe);
-    }
-  };
-
   const mutations = new MutationObserver(() => {
-    for (const badge of listeOutils.children) {
-      if (badge !== svgLiens) {
-        badgesOutils.add(badge);
-        badge.classList.add("outil-constellation-noeud");
-      }
-    }
-    dessinerLiens();
+    preparerBadges();
     programmerMiseAJour();
   });
   mutations.observe(listeOutils, { childList: true });
-  const redimensionnement = new ResizeObserver(() => {
-    dessinerLiens();
-    programmerMiseAJour();
-  });
-  redimensionnement.observe(listeOutils);
-  for (const badge of badgesOutils) {
-    redimensionnement.observe(badge);
-  }
   window.addEventListener("scroll", programmerMiseAJour, { passive: true });
   window.addEventListener("resize", programmerMiseAJour);
   preferenceMouvement.addEventListener("change", programmerMiseAJour);
-  dessinerLiens();
   programmerMiseAJour();
   return true;
 }
