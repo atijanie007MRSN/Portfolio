@@ -141,12 +141,12 @@ if (!surveillerGrandsTitres()) {
 }
 
 const outilsCreatifs = [
-  { nom: "Photoshop", fichier: "photoshop.svg" },
-  { nom: "Illustrator", fichier: "illustrator.svg" },
+  { nom: "Photoshop", fichier: "photoshop.png" },
+  { nom: "Illustrator", fichier: "illustrator.png" },
   { nom: "InDesign", fichier: "indesign.svg" },
-  { nom: "Premiere Pro", fichier: "premiere-pro.svg" },
-  { nom: "After Effects", fichier: "after-effects.svg" },
-  { nom: "DaVinci Resolve", fichier: "davinci-resolve.svg" },
+  { nom: "Premiere Pro", fichier: "premiere-pro.png" },
+  { nom: "After Effects", fichier: "adobe-after-effects-cc-icon-4632 - Copie.png" },
+  { nom: "DaVinci Resolve", fichier: "davinci_resolve_macos_bigsur_icon_190261.png" },
 ];
 
 function ajouterOutilsCreatifs() {
