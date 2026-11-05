@@ -25,7 +25,7 @@ video {
     ),
     linear-gradient(#edeff5, #edeff5);
   background-position: var(--titre-progression, 0%) 0, 0 0;
-  background-size: 33% 100%, 100% 100%;
+  background-size: 23% 100%, 100% 100%;
   background-repeat: no-repeat;
   background-clip: text;
   color: transparent;
