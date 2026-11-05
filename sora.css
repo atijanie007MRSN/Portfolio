@@ -11,6 +11,28 @@ video {
   object-fit: cover !important;
 }
 
+.titre-logo-anime {
+  background-image:
+    linear-gradient(
+      90deg,
+      #571bc4 0%,
+      #a981ff 18%,
+      #42e7f5 38%,
+      #38cc78 52%,
+      #ed3769 66%,
+      #ff8c25 82%,
+      #571bc4 100%
+    ),
+    linear-gradient(#edeff5, #edeff5);
+  background-position: left top;
+  background-size: var(--titre-progression, 0%) 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 nav a[href="#hero"] span {
   color: #fff !important;
 }
@@ -165,20 +187,39 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
 }
 
 .dclic-badges-track {
-  display: flex;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scrollbar-width: none;
+  overflow: hidden;
   cursor: grab;
   touch-action: pan-y;
   user-select: none;
 }
 
-.dclic-badges-track::-webkit-scrollbar {
-  display: none;
+.dclic-badges-marquee {
+  display: flex;
+  width: max-content;
+  animation: dclic-badges-defilement 60s linear infinite;
 }
 
-.dclic-badges-track:active {
+.dclic-badges-track:focus-within .dclic-badges-marquee,
+.dclic-badges-track.is-dragging .dclic-badges-marquee {
+  animation-play-state: paused;
+}
+
+.dclic-badges-group {
+  display: flex;
+  flex: 0 0 auto;
+}
+
+@keyframes dclic-badges-defilement {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.dclic-badges-track.is-dragging {
   cursor: grabbing;
 }
 
@@ -199,7 +240,11 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
   transition: opacity 180ms ease, transform 180ms ease;
 }
 
-.dclic-badge:not(:last-child)::after {
+.dclic-badge:last-child::after {
+  right: -1px;
+}
+
+.dclic-badge::after {
   position: absolute;
   top: 20%;
   right: 0;
@@ -224,6 +269,19 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .dclic-badges-track {
+    cursor: default;
+  }
+
+  .dclic-badges-marquee {
+    animation: none;
+    transform: none;
+  }
+
+  .dclic-badges-group[aria-hidden="true"] {
+    display: none;
+  }
+
   .dclic-badge {
     transition: none;
   }

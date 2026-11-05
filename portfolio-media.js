@@ -63,6 +63,58 @@ function surveillerPortfolio() {
   return true;
 }
 
+function surveillerGrandsTitres() {
+  const racine = document.querySelector("#root");
+  if (!racine) {
+    return false;
+  }
+
+  const titres = new Set();
+  const preferenceMouvement = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let miseAJourEnAttente = false;
+  const mettreAJourProgression = () => {
+    miseAJourEnAttente = false;
+    const hauteurVue = window.innerHeight;
+    const debut = hauteurVue * 0.82;
+    const fin = hauteurVue * 0.2;
+
+    for (const titre of titres) {
+      const haut = titre.getBoundingClientRect().top;
+      const progression = preferenceMouvement.matches
+        ? 1
+        : Math.max(0, Math.min(1, (debut - haut) / (debut - fin)));
+      titre.style.setProperty("--titre-progression", `${progression * 100}%`);
+    }
+  };
+  const programmerMiseAJour = () => {
+    if (miseAJourEnAttente) {
+      return;
+    }
+
+    miseAJourEnAttente = true;
+    window.requestAnimationFrame(mettreAJourProgression);
+  };
+  const observerLesTitres = () => {
+    for (const titre of racine.querySelectorAll("h1, section h2")) {
+      if (titres.has(titre)) {
+        continue;
+      }
+
+      titres.add(titre);
+      titre.classList.add("titre-logo-anime");
+    }
+    programmerMiseAJour();
+  };
+
+  const mutations = new MutationObserver(observerLesTitres);
+  mutations.observe(racine, { childList: true, subtree: true });
+  window.addEventListener("scroll", programmerMiseAJour, { passive: true });
+  window.addEventListener("resize", programmerMiseAJour);
+  preferenceMouvement.addEventListener("change", programmerMiseAJour);
+  observerLesTitres();
+  return true;
+}
+
 if (!surveillerPortfolio()) {
   const attentePortfolio = new MutationObserver(() => {
     if (surveillerPortfolio()) {
@@ -70,6 +122,15 @@ if (!surveillerPortfolio()) {
     }
   });
   attentePortfolio.observe(document.documentElement, { childList: true, subtree: true });
+}
+
+if (!surveillerGrandsTitres()) {
+  const attenteRacine = new MutationObserver(() => {
+    if (surveillerGrandsTitres()) {
+      attenteRacine.disconnect();
+    }
+  });
+  attenteRacine.observe(document.documentElement, { childList: true, subtree: true });
 }
 
 const badgesDclic = [
@@ -107,13 +168,19 @@ function ajouterBadgesDclic() {
   const description = document.createElement("p");
   description.className = "dclic-badges-description";
   description.textContent =
-    "Marketing numérique — faites glisser les badges pour les parcourir, ou cliquez pour les agrandir.";
+    "Marketing numérique — les badges défilent en boucle ; faites-les glisser pour les parcourir, ou cliquez pour les agrandir.";
 
   const piste = document.createElement("div");
   piste.className = "dclic-badges-track";
   piste.tabIndex = 0;
   piste.setAttribute("role", "region");
   piste.setAttribute("aria-label", "Badges D-Clic — défilement horizontal");
+
+  const defilement = document.createElement("div");
+  defilement.className = "dclic-badges-marquee";
+
+  const groupe = document.createElement("div");
+  groupe.className = "dclic-badges-group";
 
   for (const [index, fichier] of badgesDclic.entries()) {
     const url = `/${encodeURIComponent(fichier)}`;
@@ -136,28 +203,68 @@ function ajouterBadgesDclic() {
     });
 
     lien.append(image);
-    piste.append(lien);
+    groupe.append(lien);
   }
 
+  const copie = groupe.cloneNode(true);
+  copie.setAttribute("aria-hidden", "true");
+  copie.inert = true;
+  defilement.append(groupe, copie);
+  piste.append(defilement);
   contenu.append(titre, description, piste);
   section.append(contenu);
   competences.insertAdjacentElement("afterend", section);
 
+  const dureeDefilement = 60000;
+  const lireTranslation = () => new DOMMatrixReadOnly(getComputedStyle(defilement).transform).m41;
+  const normaliserTranslation = (translation) => {
+    const largeur = groupe.getBoundingClientRect().width;
+    if (!largeur) {
+      return translation;
+    }
+
+    while (translation > 0) {
+      translation -= largeur;
+    }
+    while (translation <= -largeur) {
+      translation += largeur;
+    }
+    return translation;
+  };
+  const reprendreDefilement = (translation) => {
+    const largeur = groupe.getBoundingClientRect().width;
+    if (largeur) {
+      const progression = ((normaliserTranslation(translation) + largeur) / largeur) % 1;
+      defilement.style.animationDelay = `${-progression * dureeDefilement}ms`;
+    }
+    defilement.style.removeProperty("transform");
+    defilement.style.removeProperty("animation");
+    piste.classList.remove("is-dragging");
+  };
+
   let debutX = 0;
-  let debutDefilement = 0;
+  let debutTranslation = 0;
+  let translationActuelle = 0;
   let pointeurActif = null;
   let aGlisse = false;
   let dernierGlissement = 0;
 
   piste.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0) {
+    if (
+      event.button !== 0 ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
       return;
     }
 
     pointeurActif = event.pointerId;
     debutX = event.clientX;
-    debutDefilement = piste.scrollLeft;
+    debutTranslation = lireTranslation();
+    translationActuelle = debutTranslation;
     aGlisse = false;
+    defilement.style.animation = "none";
+    defilement.style.transform = `translateX(${debutTranslation}px)`;
+    piste.classList.add("is-dragging");
     piste.setPointerCapture(event.pointerId);
   });
 
@@ -171,7 +278,8 @@ function ajouterBadgesDclic() {
       aGlisse = true;
     }
     if (aGlisse) {
-      piste.scrollLeft = debutDefilement - distance;
+      translationActuelle = normaliserTranslation(debutTranslation + distance);
+      defilement.style.transform = `translateX(${translationActuelle}px)`;
     }
   });
 
@@ -185,6 +293,7 @@ function ajouterBadgesDclic() {
     }
     pointeurActif = null;
     aGlisse = false;
+    reprendreDefilement(translationActuelle);
   };
 
   piste.addEventListener("pointerup", terminerGlissement);
