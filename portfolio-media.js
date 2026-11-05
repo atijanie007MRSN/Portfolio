@@ -85,9 +85,7 @@ function surveillerGrandsTitres() {
             0,
             Math.min(
               1,
-              titre.tagName === "H1"
-                ? window.scrollY / (hauteurVue * 0.62)
-                : (debut - titre.getBoundingClientRect().top) / (debut - fin),
+              (debut - titre.getBoundingClientRect().top) / (debut - fin),
             ),
           );
       titre.style.setProperty("--titre-progression", `${progression * 100}%`);
@@ -102,7 +100,7 @@ function surveillerGrandsTitres() {
     window.requestAnimationFrame(mettreAJourProgression);
   };
   const observerLesTitres = () => {
-    for (const titre of racine.querySelectorAll("h1, section h2")) {
+    for (const titre of racine.querySelectorAll("section h2")) {
       if (titres.has(titre)) {
         continue;
       }
