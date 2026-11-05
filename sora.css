@@ -15,17 +15,19 @@ video {
   background-image:
     linear-gradient(
       90deg,
-      #571bc4 0%,
-      #a981ff 18%,
+      transparent 0%,
+      #571bc4 8%,
+      #a981ff 22%,
       #42e7f5 38%,
       #38cc78 52%,
       #ed3769 66%,
       #ff8c25 82%,
-      #571bc4 100%
+      #571bc4 92%,
+      transparent 100%
     ),
     linear-gradient(#edeff5, #edeff5);
-  background-position: left top;
-  background-size: var(--titre-progression, 0%) 100%, 100% 100%;
+  background-position: var(--titre-progression, 0%) 0, 0 0;
+  background-size: 22% 100%, 100% 100%;
   background-repeat: no-repeat;
   background-clip: text;
   color: transparent;
