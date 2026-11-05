@@ -75,17 +75,19 @@ function surveillerGrandsTitres() {
   const mettreAJourProgression = () => {
     miseAJourEnAttente = false;
     const hauteurVue = window.innerHeight;
-    const debut = hauteurVue * 0.82;
-    const fin = hauteurVue * 0.2;
+    const debut = hauteurVue * 0.65;
+    const fin = hauteurVue * 0.35;
 
     for (const titre of titres) {
+      const boiteTitre = titre.getBoundingClientRect();
+      const centreTitre = boiteTitre.top + boiteTitre.height / 2;
       const progression = preferenceMouvement.matches
         ? 1
         : Math.max(
             0,
             Math.min(
               1,
-              (debut - titre.getBoundingClientRect().top) / (debut - fin),
+              (debut - centreTitre) / (debut - fin),
             ),
           );
       titre.style.setProperty("--titre-progression", `${progression * 100}%`);
