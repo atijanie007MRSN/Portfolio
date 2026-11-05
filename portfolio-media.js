@@ -141,12 +141,12 @@ if (!surveillerGrandsTitres()) {
 }
 
 const outilsCreatifs = [
-  { nom: "Photoshop", fichier: "photoshop.png" },
-  { nom: "Illustrator", fichier: "illustrator.png" },
+  { nom: "Photoshop", fichier: "photoshop.svg" },
+  { nom: "Illustrator", fichier: "illustrator.svg" },
   { nom: "InDesign", fichier: "indesign.svg" },
-  { nom: "Premiere Pro", fichier: "premiere-pro.png" },
-  { nom: "After Effects", fichier: "adobe-after-effects-cc-icon-4632 - Copie.png" },
-  { nom: "DaVinci Resolve", fichier: "davinci_resolve_macos_bigsur_icon_190261.png" },
+  { nom: "Premiere Pro", fichier: "premiere-pro.svg" },
+  { nom: "After Effects", fichier: "after-effects.svg" },
+  { nom: "DaVinci Resolve", fichier: "davinci-resolve.svg" },
 ];
 
 function ajouterOutilsCreatifs() {
@@ -183,13 +183,18 @@ function ajouterOutilsCreatifs() {
     const debut = hauteurVue * 0.84;
     const fin = hauteurVue * 0.5;
 
-    for (const badge of badgesOutils) {
-      const boite = badge.getBoundingClientRect();
+    for (const conteneur of badgesOutils) {
+      if (!conteneur.isConnected) {
+        badgesOutils.delete(conteneur);
+        continue;
+      }
+
+      const boite = conteneur.getBoundingClientRect();
       const centre = boite.top + boite.height / 2;
       const progression = preferenceMouvement.matches
         ? 1
         : Math.max(0, Math.min(1, (debut - centre) / (debut - fin)));
-      badge.style.setProperty("--outil-progression", progression);
+      conteneur.style.setProperty("--outil-progression", progression);
     }
   };
   const programmerMiseAJour = () => {
@@ -202,12 +207,24 @@ function ajouterOutilsCreatifs() {
   };
 
   for (const outil of outilsCreatifs) {
-    const badge = [...listeOutils.children].find(
-      (element) => element.textContent.trim() === outil.nom,
+    const elementOutil = [...listeOutils.children].find(
+      (element) =>
+        element.dataset.outilCreatif === outil.nom || element.textContent.trim() === outil.nom,
     );
-    if (!badge || badge.dataset.outilCreatif) {
+    const badge = elementOutil?.classList.contains("outil-creatif-conteneur")
+      ? elementOutil.querySelector(".outil-creatif")
+      : elementOutil;
+    if (!badge) {
       continue;
     }
+    if (badge.dataset.outilCreatif) {
+      badgesOutils.add(badge.parentElement);
+      continue;
+    }
+
+    const conteneur = document.createElement("span");
+    conteneur.className = "outil-creatif-conteneur";
+    conteneur.dataset.outilCreatif = outil.nom;
 
     const icone = document.createElement("img");
     icone.className = "outil-creatif-icone";
@@ -223,19 +240,21 @@ function ajouterOutilsCreatifs() {
     libelle.className = "outil-creatif-libelle";
     libelle.textContent = outil.nom;
 
-    badge.replaceChildren(icone, libelle);
+    badge.replaceChildren(libelle);
     badge.dataset.outilCreatif = outil.nom;
     badge.classList.add("outil-creatif");
     badge.style.setProperty("--outil-progression", "0");
-    badgesOutils.add(badge);
+    badge.before(conteneur);
+    conteneur.append(icone, badge);
+    badgesOutils.add(conteneur);
   }
 
   const mutations = new MutationObserver(() => {
     for (const outil of outilsCreatifs) {
       const badge = [...listeOutils.children].find(
-        (element) => element.textContent.trim() === outil.nom,
+        (element) => element.dataset.outilCreatif === outil.nom,
       );
-      if (badge?.dataset.outilCreatif) {
+      if (badge) {
         badgesOutils.add(badge);
       }
     }
