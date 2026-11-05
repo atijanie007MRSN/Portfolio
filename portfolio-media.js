@@ -140,6 +140,124 @@ if (!surveillerGrandsTitres()) {
   attenteRacine.observe(document.documentElement, { childList: true, subtree: true });
 }
 
+const outilsCreatifs = [
+  { nom: "Photoshop", fichier: "photoshop.png" },
+  { nom: "Illustrator", fichier: "illustrator.png" },
+  { nom: "InDesign", fichier: "indesign.svg" },
+  { nom: "Premiere Pro", fichier: "premiere-pro.png" },
+  { nom: "After Effects", fichier: "adobe-after-effects-cc-icon-4632 - Copie.png" },
+  { nom: "DaVinci Resolve", fichier: "davinci_resolve_macos_bigsur_icon_190261.png" },
+];
+
+function ajouterOutilsCreatifs() {
+  const competences = document.querySelector("#competences");
+  const listeOutils = competences?.querySelector(".grid > div.flex.flex-wrap.gap-3.justify-center");
+  if (!listeOutils) {
+    return false;
+  }
+
+  const etiquettePhotoshop = [...listeOutils.children].find(
+    (element) => element.textContent.trim() === "Photoshop",
+  );
+  const etiquetteIllustrator = [...listeOutils.children].find(
+    (element) => element.textContent.trim() === "Illustrator",
+  );
+  if (
+    etiquettePhotoshop &&
+    etiquetteIllustrator &&
+    ![...listeOutils.children].some((element) => element.textContent.trim() === "InDesign")
+  ) {
+    const etiquetteInDesign = etiquettePhotoshop.cloneNode(false);
+    etiquetteInDesign.textContent = "InDesign";
+    etiquetteInDesign.style.removeProperty("opacity");
+    etiquetteInDesign.style.removeProperty("transform");
+    etiquetteIllustrator.after(etiquetteInDesign);
+  }
+
+  const badgesOutils = new Set();
+  const preferenceMouvement = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let miseAJourEnAttente = false;
+  const mettreAJourProgression = () => {
+    miseAJourEnAttente = false;
+    const hauteurVue = window.innerHeight;
+    const debut = hauteurVue * 0.84;
+    const fin = hauteurVue * 0.5;
+
+    for (const badge of badgesOutils) {
+      const boite = badge.getBoundingClientRect();
+      const centre = boite.top + boite.height / 2;
+      const progression = preferenceMouvement.matches
+        ? 1
+        : Math.max(0, Math.min(1, (debut - centre) / (debut - fin)));
+      badge.style.setProperty("--outil-progression", progression);
+    }
+  };
+  const programmerMiseAJour = () => {
+    if (miseAJourEnAttente) {
+      return;
+    }
+
+    miseAJourEnAttente = true;
+    window.requestAnimationFrame(mettreAJourProgression);
+  };
+
+  for (const outil of outilsCreatifs) {
+    const badge = [...listeOutils.children].find(
+      (element) => element.textContent.trim() === outil.nom,
+    );
+    if (!badge || badge.dataset.outilCreatif) {
+      continue;
+    }
+
+    const icone = document.createElement("img");
+    icone.className = "outil-creatif-icone";
+    icone.src = `/${encodeURIComponent(outil.fichier)}`;
+    icone.alt = "";
+    icone.setAttribute("aria-hidden", "true");
+    icone.draggable = false;
+    icone.addEventListener("error", () => {
+      console.error(`Impossible de charger l’icône de ${outil.nom} : ${outil.fichier}`);
+    });
+
+    const libelle = document.createElement("span");
+    libelle.className = "outil-creatif-libelle";
+    libelle.textContent = outil.nom;
+
+    badge.replaceChildren(icone, libelle);
+    badge.dataset.outilCreatif = outil.nom;
+    badge.classList.add("outil-creatif");
+    badge.style.setProperty("--outil-progression", "0");
+    badgesOutils.add(badge);
+  }
+
+  const mutations = new MutationObserver(() => {
+    for (const outil of outilsCreatifs) {
+      const badge = [...listeOutils.children].find(
+        (element) => element.textContent.trim() === outil.nom,
+      );
+      if (badge?.dataset.outilCreatif) {
+        badgesOutils.add(badge);
+      }
+    }
+    programmerMiseAJour();
+  });
+  mutations.observe(listeOutils, { childList: true, subtree: true });
+  window.addEventListener("scroll", programmerMiseAJour, { passive: true });
+  window.addEventListener("resize", programmerMiseAJour);
+  preferenceMouvement.addEventListener("change", programmerMiseAJour);
+  programmerMiseAJour();
+  return true;
+}
+
+if (!ajouterOutilsCreatifs()) {
+  const attenteOutils = new MutationObserver(() => {
+    if (ajouterOutilsCreatifs()) {
+      attenteOutils.disconnect();
+    }
+  });
+  attenteOutils.observe(document.documentElement, { childList: true, subtree: true });
+}
+
 const badgesDclic = [
   "Compétence_1_Session_juillet_2026_30_juil._2026_ad0fcfda.png",
   "Compétence_2_Session_juillet_2026_31_juil._2026_1a120ede.png",

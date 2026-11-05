@@ -11,6 +11,38 @@ video {
   object-fit: cover !important;
 }
 
+.outil-creatif {
+  position: relative;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.outil-creatif-icone {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: 2.25rem;
+  height: 2.25rem;
+  object-fit: contain;
+  opacity: calc(0.14 + var(--outil-progression, 0) * 0.3);
+  filter: blur(calc((1 - var(--outil-progression, 0)) * 3px));
+  transform: translate(-50%, -50%)
+    scale(calc(0.72 + var(--outil-progression, 0) * 0.28));
+  pointer-events: none;
+  transition: filter 120ms linear, opacity 120ms linear, transform 120ms linear;
+}
+
+.outil-creatif-libelle {
+  position: relative;
+  z-index: 1;
+}
+
 .titre-logo-anime {
   background-image:
     linear-gradient(
@@ -120,6 +152,13 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .outil-creatif-icone {
+    opacity: 0.4;
+    filter: none;
+    transform: translate(-50%, -50%) scale(1);
+    transition: none;
+  }
+
   #services .text-4xl.mb-4::before {
     animation: none;
   }
