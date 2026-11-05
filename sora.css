@@ -13,36 +13,49 @@ video {
 
 .outil-creatif-conteneur {
   position: relative;
-  display: inline-flex !important;
+  display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  isolation: isolate;
   overflow: visible;
   --outil-progression: 0;
 }
 
 .outil-creatif {
-  position: relative;
-  z-index: 1;
   overflow: visible !important;
   opacity: 1 !important;
   transform: none !important;
 }
 
 .outil-creatif-icone {
-  position: absolute;
-  z-index: 0;
-  top: 50%;
-  left: 50%;
-  width: 4.25rem;
-  height: 4.25rem;
+  width: 2.75rem;
+  height: 2.75rem;
   object-fit: contain;
-  opacity: calc(0.08 + var(--outil-progression, 0) * 0.5);
-  filter: blur(calc((1 - var(--outil-progression, 0)) * 5px));
-  transform: translate(-50%, -50%)
-    scale(calc(0.65 + var(--outil-progression, 0) * 0.35));
+  opacity: calc(var(--outil-progression, 0) * 0.9);
+  filter: blur(calc((1 - var(--outil-progression, 0)) * 4px));
+  transform: translateY(calc((1 - var(--outil-progression, 0)) * 0.5rem))
+    scale(calc(0.7 + var(--outil-progression, 0) * 0.3));
   pointer-events: none;
-  transition: filter 160ms linear, opacity 160ms linear, transform 160ms linear;
+  transition: filter 140ms linear, opacity 140ms linear, transform 140ms linear;
+}
+
+.outil-creatif-liaison {
+  width: 2rem;
+  height: 1.2rem;
+  flex: none;
+  overflow: visible;
+  opacity: var(--outil-progression, 0);
+  transition: opacity 140ms linear;
+}
+
+.outil-creatif-liaison path {
+  fill: none;
+  stroke: #a78bfa;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 36;
+  stroke-dashoffset: calc((1 - var(--outil-progression, 0)) * 36);
+  transition: stroke-dashoffset 140ms linear;
 }
 
 .outil-creatif-libelle {
@@ -160,9 +173,16 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
 
 @media (prefers-reduced-motion: reduce) {
   .outil-creatif-icone {
-    opacity: 0.55;
+    opacity: 0.9;
     filter: none;
-    transform: translate(-50%, -50%) scale(1);
+    transform: none;
+    transition: none;
+  }
+
+  .outil-creatif-liaison,
+  .outil-creatif-liaison path {
+    opacity: 1;
+    stroke-dashoffset: 0;
     transition: none;
   }
 

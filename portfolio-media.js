@@ -189,7 +189,7 @@ function ajouterOutilsCreatifs() {
         continue;
       }
 
-      const boite = conteneur.getBoundingClientRect();
+      const boite = conteneur.querySelector(".outil-creatif").getBoundingClientRect();
       const centre = boite.top + boite.height / 2;
       const progression = preferenceMouvement.matches
         ? 1
@@ -206,7 +206,7 @@ function ajouterOutilsCreatifs() {
     window.requestAnimationFrame(mettreAJourProgression);
   };
 
-  for (const outil of outilsCreatifs) {
+  for (const [index, outil] of outilsCreatifs.entries()) {
     const elementOutil = [...listeOutils.children].find(
       (element) =>
         element.dataset.outilCreatif === outil.nom || element.textContent.trim() === outil.nom,
@@ -225,6 +225,7 @@ function ajouterOutilsCreatifs() {
     const conteneur = document.createElement("span");
     conteneur.className = "outil-creatif-conteneur";
     conteneur.dataset.outilCreatif = outil.nom;
+    conteneur.classList.add(index % 2 === 0 ? "outil-icone-dessus" : "outil-icone-dessous");
 
     const icone = document.createElement("img");
     icone.className = "outil-creatif-icone";
@@ -236,6 +237,14 @@ function ajouterOutilsCreatifs() {
       console.error(`Impossible de charger l’icône de ${outil.nom} : ${outil.fichier}`);
     });
 
+    const liaison = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    liaison.classList.add("outil-creatif-liaison");
+    liaison.setAttribute("viewBox", "0 0 32 24");
+    liaison.setAttribute("aria-hidden", "true");
+    const trait = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    trait.setAttribute("d", "M16 1 C27 6 5 18 16 23");
+    liaison.append(trait);
+
     const libelle = document.createElement("span");
     libelle.className = "outil-creatif-libelle";
     libelle.textContent = outil.nom;
@@ -245,7 +254,11 @@ function ajouterOutilsCreatifs() {
     badge.classList.add("outil-creatif");
     badge.style.setProperty("--outil-progression", "0");
     badge.before(conteneur);
-    conteneur.append(icone, badge);
+    if (index % 2 === 0) {
+      conteneur.append(icone, liaison, badge);
+    } else {
+      conteneur.append(badge, liaison, icone);
+    }
     badgesOutils.add(conteneur);
   }
 
