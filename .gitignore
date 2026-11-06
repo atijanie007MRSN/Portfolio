@@ -4,3 +4,5 @@ authorize.json
 site-netlify-a-deposer/
 .DS_Store
 Thumbs.db
+dist/
+cloudflare-pages-upload.zip

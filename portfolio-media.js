@@ -140,6 +140,83 @@ if (!surveillerGrandsTitres()) {
   attenteRacine.observe(document.documentElement, { childList: true, subtree: true });
 }
 
+function configurerCompetencesVideo() {
+  const competences = document.querySelector("#competences .grid > div.space-y-5");
+  if (!competences || competences.dataset.videoSepare === "true") {
+    return Boolean(competences);
+  }
+
+  const [design, video, motion, strategie] = competences.children;
+  if (!design || !video || !motion || !strategie) {
+    return false;
+  }
+
+  const creerBarre = (modele, libelle, niveau, valeur) => {
+    const barre = modele.cloneNode(true);
+    const textes = barre.querySelectorAll(".flex.justify-between > span");
+    const conteneur = barre.querySelector('[role="img"]');
+    const progression = conteneur?.firstElementChild;
+    if (textes.length !== 2 || !conteneur || !progression) {
+      throw new Error(`Impossible de créer la barre de compétence « ${libelle} ».`);
+    }
+
+    textes[0].textContent = libelle;
+    textes[1].textContent = niveau;
+    conteneur.setAttribute("aria-label", `${libelle} : niveau ${niveau.toLowerCase()}`);
+    progression.style.width = "0%";
+    progression.style.transition = "width 1s ease";
+    progression.dataset.progressionCible = `${valeur}%`;
+    return barre;
+  };
+
+  const nouvellesCompetences = [
+    creerBarre(design, "Photographie", "Intermédiaire", 60),
+    creerBarre(video, "Montage vidéo", "Avancé", 85),
+    creerBarre(video, "Sound design", "Avancé", 85),
+    creerBarre(motion, "Motion design", "Intermédiaire", 60),
+    creerBarre(motion, "Étalonnage", "Confirmé", 80),
+    creerBarre(strategie, "Gestion de projet", "Intermédiaire", 60),
+  ];
+  video.before(...nouvellesCompetences);
+  video.remove();
+  motion.remove();
+  competences.dataset.videoSepare = "true";
+
+  const observateur = new IntersectionObserver(
+    (entrees, observer) => {
+      for (const entree of entrees) {
+        if (!entree.isIntersecting) {
+          continue;
+        }
+
+        const progression = entree.target.querySelector("[data-progression-cible]");
+        if (progression) {
+          requestAnimationFrame(() => {
+            progression.style.width = progression.dataset.progressionCible;
+          });
+        }
+        observer.unobserve(entree.target);
+      }
+    },
+    { threshold: 0.25 },
+  );
+
+  for (const barre of nouvellesCompetences) {
+    observateur.observe(barre);
+  }
+
+  return true;
+}
+
+if (!configurerCompetencesVideo()) {
+  const attenteCompetences = new MutationObserver(() => {
+    if (configurerCompetencesVideo()) {
+      attenteCompetences.disconnect();
+    }
+  });
+  attenteCompetences.observe(document.documentElement, { childList: true, subtree: true });
+}
+
 const outilsCreatifs = [
   { nom: "Photoshop", fichier: "photoshop.png" },
   { nom: "Illustrator", fichier: "illustrator.png" },
@@ -149,7 +226,9 @@ const outilsCreatifs = [
   { nom: "DaVinci Resolve", fichier: "davinci_resolve_macos_bigsur_icon_190261.png" },
   { nom: "Figma", fichier: "figma.svg" },
   { nom: "Mistral AI", fichier: "mistral-ai.svg" },
-  { nom: "Meta Ads", fichier: "Meta_lockup_positive primary_RGB.svg" },
+  { nom: "Meta Ads", fichier: "Meta_lockup_negative primary_white_RGB.svg" },
+  { nom: "Claude", fichier: "claude-color.svg" },
+  { nom: "Zapier", fichier: "zapier-wordmark-white_png.png" },
 ];
 
 function ajouterOutilsCreatifs() {
@@ -166,18 +245,33 @@ function ajouterOutilsCreatifs() {
     [...listeOutils.children].find(
       (element) => element.dataset.outilCreatif === nom || element.textContent.trim() === nom,
     );
-  if (!trouverElementOutil("InDesign")) {
-    const photoshop = trouverElementOutil("Photoshop");
-    const illustrator = trouverElementOutil("Illustrator");
-    const badgeSource = photoshop?.querySelector(".outil-creatif") ?? photoshop;
-    if (badgeSource && illustrator) {
-      const etiquetteInDesign = badgeSource.cloneNode(false);
-      etiquetteInDesign.textContent = "InDesign";
-      etiquetteInDesign.removeAttribute("data-outil-creatif");
-      etiquetteInDesign.classList.remove("outil-creatif", "outil-constellation-noeud");
-      etiquetteInDesign.style.removeProperty("opacity");
-      etiquetteInDesign.style.removeProperty("transform");
-      illustrator.after(etiquetteInDesign);
+  const photoshop = trouverElementOutil("Photoshop");
+  const badgeSource = photoshop?.querySelector(".outil-creatif") ?? photoshop;
+  if (badgeSource) {
+    for (const [index, outil] of outilsCreatifs.entries()) {
+      if (trouverElementOutil(outil.nom)) {
+        continue;
+      }
+
+      const etiquette = badgeSource.cloneNode(false);
+      etiquette.textContent = outil.nom;
+      etiquette.removeAttribute("data-outil-creatif");
+      etiquette.classList.remove("outil-creatif", "outil-constellation-noeud");
+      etiquette.style.removeProperty("opacity");
+      etiquette.style.removeProperty("transform");
+
+      const outilPrecedent = outilsCreatifs
+        .slice(0, index)
+        .reverse()
+        .find((precedent) => trouverElementOutil(precedent.nom));
+      const elementPrecedent = outilPrecedent
+        ? trouverElementOutil(outilPrecedent.nom)
+        : null;
+      if (elementPrecedent) {
+        elementPrecedent.after(etiquette);
+      } else {
+        listeOutils.append(etiquette);
+      }
     }
   }
 
@@ -191,6 +285,8 @@ function ajouterOutilsCreatifs() {
     "outil-icone-bas-gauche",
     "outil-icone-haut-droite",
     "outil-icone-bas-gauche",
+    "outil-icone-haut-gauche",
+    "outil-icone-bas-droite",
   ];
   const conteneurs = new Set();
   const preparerBadges = () => {
