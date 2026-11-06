@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1A2D46" />
+    <meta
+      name="description"
+      content="Projet Diplômes PMI Sénégal — deux modèles de diplôme pour le Chapitre PMI Sénégal."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Diplômes PMI Sénégal — Documents du projet | A.TIJANIE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Sora", sans-serif;
+        background: #1a2d46;
+        color: #edeff5;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 4rem 1.5rem 6rem;
+      }
+
+      .retour {
+        align-self: flex-start;
+        max-width: 72rem;
+        width: 100%;
+        margin-bottom: 2.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #8ecae6;
+        text-decoration: none;
+      }
+
+      .retour:hover {
+        text-decoration: underline;
+      }
+
+      .en-tete {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .logo {
+        height: 90px;
+        width: auto;
+        margin-bottom: 1.5rem;
+        animation: flottant 4s ease-in-out infinite;
+      }
+
+      @keyframes flottant {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-4px);
+        }
+      }
+
+      h1 {
+        font-family: "Sora", sans-serif;
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 800;
+        color: #219ebc;
+      }
+
+      .sous-titre {
+        margin-top: 0.75rem;
+        font-size: 0.95rem;
+        color: #edeff5bb;
+      }
+
+      .documents {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.5rem;
+        width: 100%;
+        max-width: 72rem;
+      }
+
+      .document {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1.75rem;
+        border-radius: 1rem;
+        background: #12121e;
+        border: 1px solid #8ecae633;
+        box-shadow: 0 4px 14px rgb(0 0 0 / 35%);
+      }
+
+      .document .type {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #fb8500;
+      }
+
+      .document h2 {
+        font-family: "Sora", sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #219ebc;
+      }
+
+      .document p {
+        flex: 1;
+        font-size: 0.875rem;
+        color: #edeff5bb;
+      }
+
+      .document a {
+        display: inline-block;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #fb8500;
+        text-decoration: none;
+      }
+
+      .document a:hover {
+        text-decoration: underline;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .logo {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="retour" href="/#portfolio">← Retour au portfolio</a>
+
+    <header class="en-tete">
+      <img
+        class="logo"
+        src="/PMI%20Collab%20%281%29.png"
+        alt="Logo PMI Collab"
+      />
+      <h1>Diplômes PMI Sénégal</h1>
+      <p class="sous-titre">
+        Conception de deux modèles de diplôme pour le Chapitre PMI Sénégal
+      </p>
+    </header>
+
+    <main class="documents">
+      <article class="document">
+        <span class="type">Document PDF</span>
+        <h2>Herman Akonzzo</h2>
+        <p>Premier modèle de diplôme — Chapitre PMI Sénégal.</p>
+        <a
+          href="/Herman%20Akonzzo.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Voir le document ↗</a
+        >
+      </article>
+
+      <article class="document">
+        <span class="type">Document PDF</span>
+        <h2>Herman Akonzzo II</h2>
+        <p>Deuxième modèle de diplôme — Chapitre PMI Sénégal.</p>
+        <a
+          href="/Herman%20Akonzzo%20II.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Voir le document ↗</a
+        >
+      </article>
+    </main>
+  </body>
+</html>

@@ -11,14 +11,44 @@ video {
   object-fit: cover !important;
 }
 
+.competences-humaines {
+  margin-top: 1.5rem;
+}
+
+.competences-humaines h3 {
+  margin-bottom: 0.75rem;
+  color: #f5f4fa;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.liste-competences-humaines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.liste-competences-humaines li {
+  padding: 0.45rem 0.75rem;
+  border: 1px solid rgba(200, 197, 216, 0.16);
+  border-radius: 999px;
+  background: #101015;
+  color: #d7d4e0;
+  font-size: 0.8rem;
+}
+
 .outils-constellation {
   position: relative;
   display: flex !important;
+  align-self: start;
   align-items: center;
-  justify-content: space-around !important;
+  justify-content: space-between !important;
   gap: 1.5rem 1.1rem !important;
   min-height: 12rem;
-  padding: 1.5rem 0.75rem;
+  padding: 1.5rem 0;
   overflow: visible;
 }
 
@@ -185,7 +215,7 @@ video {
   .outils-constellation {
     gap: 1.25rem 0.75rem !important;
     min-height: 10rem;
-    padding: 1.25rem 0.25rem;
+    padding: 1.25rem 0;
   }
 
   .outil-creatif-conteneur {
@@ -400,9 +430,51 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
   background: #000 !important;
 }
 
-#portfolio article:has(img[alt="Aperçu du projet Identité Visuelle Radio UGB"]) img {
+#portfolio article:has(img[alt="Aperçu du projet Authentik'COM"]) > div:first-child,
+#portfolio article:has(img[alt="Aperçu du projet A M E C R A C"]) > div:first-child,
+#portfolio article:has(img[alt="Aperçu du projet COMÉDIA (Projet fictif)"]) > div:first-child,
+#portfolio article:has(img[alt="Aperçu du projet Diplômes PMI Sénégal"]) > div:first-child,
+#portfolio article:has(img[alt="Aperçu du projet COMSOLUTION Agency — JOJ 2026"]) > div:first-child,
+#portfolio article:has(img[alt="Aperçu du projet Collecte de fonds"]) > div:first-child,
+#portfolio article:has(img[alt="Aperçu du projet Don de tickets"]) > div:first-child,
+#portfolio article:has(img[alt="Aperçu du projet Octobre Rose"]) > div:first-child,
+#portfolio article:has(img[alt="Aperçu du projet Vlog Morocco"]) > div:first-child {
+  background: #0F1B2D !important;
+}
+
+#portfolio article:has(img[alt="Aperçu du projet Identité Visuelle Radio UGB"]) img,
+#portfolio article:has(img[alt="Aperçu du projet Authentik'COM"]) img,
+#portfolio article:has(img[alt="Aperçu du projet A M E C R A C"]) img,
+#portfolio article:has(img[alt="Aperçu du projet COMÉDIA (Projet fictif)"]) img,
+#portfolio article:has(img[alt="Aperçu du projet Diplômes PMI Sénégal"]) img,
+#portfolio article:has(img[alt="Aperçu du projet COMSOLUTION Agency — JOJ 2026"]) img,
+#portfolio article:has(img[alt="Aperçu du projet Collecte de fonds"]) img {
   object-fit: contain !important;
   padding: 5px 0;
+  animation: logo-radio-flottant 4s ease-in-out infinite;
+}
+
+#portfolio article:has(img[alt="Aperçu du projet Octobre Rose"]) img {
+  object-fit: contain !important;
+  padding: 5px 0;
+  animation: logo-radio-flottant 4s ease-in-out infinite;
+}
+
+#portfolio article:has(img[alt="Aperçu du projet Vlog Morocco"]) img {
+  object-fit: contain !important;
+  padding: 5px 0;
+  animation: logo-radio-flottant 4s ease-in-out infinite;
+}
+
+#portfolio article:has(img[alt="Aperçu du projet Modèle de badge RIM ORA"]) img {
+  object-fit: contain !important;
+  padding: 5px;
+  animation: logo-radio-flottant 4s ease-in-out infinite;
+}
+
+#portfolio article:has(img[alt="Aperçu du projet Don de tickets"]) img {
+  object-fit: contain !important;
+  padding: 8px;
   animation: logo-radio-flottant 4s ease-in-out infinite;
 }
 
@@ -418,20 +490,34 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #portfolio article:has(img[alt="Aperçu du projet Identité Visuelle Radio UGB"]) img {
+  #portfolio article:has(img[alt="Aperçu du projet Identité Visuelle Radio UGB"]) img,
+  #portfolio article:has(img[alt="Aperçu du projet Authentik'COM"]) img,
+  #portfolio article:has(img[alt="Aperçu du projet A M E C R A C"]) img,
+  #portfolio article:has(img[alt="Aperçu du projet COMÉDIA (Projet fictif)"]) img,
+  #portfolio article:has(img[alt="Aperçu du projet Diplômes PMI Sénégal"]) img,
+  #portfolio article:has(img[alt="Aperçu du projet Modèle de badge RIM ORA"]) img,
+  #portfolio article:has(img[alt="Aperçu du projet COMSOLUTION Agency — JOJ 2026"]) img,
+  #portfolio article:has(img[alt="Aperçu du projet Don de tickets"]) img,
+  #portfolio article:has(img[alt="Aperçu du projet Collecte de fonds"]) img,
+  #portfolio article:has(img[alt="Aperçu du projet Octobre Rose"]) img,
+  #portfolio article:has(img[alt="Aperçu du projet Vlog Morocco"]) img {
     animation: none;
   }
 }
 
-#portfolio article:has(video[data-apercu="semaine-pro"]) > div:first-child {
+#portfolio article:has(video[data-apercu]) > div:first-child {
   background: #000 !important;
 }
 
-#portfolio video.apercu-video-semaine-pro {
+#portfolio video.apercu-video {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+#portfolio article:has(video[data-apercu="masterclass"]) video.apercu-video {
+  transform: translateY(-7px);
 }
 
 .dclic-badges-section {
@@ -449,12 +535,6 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
   color: #edeff5;
   font-size: 1.25rem;
   font-weight: 700;
-}
-
-.dclic-badges-description {
-  margin: 0.4rem 0 1rem;
-  color: rgb(237 239 245 / 65%);
-  font-size: 0.8rem;
 }
 
 .dclic-badges-track {
@@ -557,3 +637,4 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
     transition: none;
   }
 }
+

@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1A2D46" />
+    <meta
+      name="description"
+      content="Projet Masterclass — captation, montage, rythme et étalonnage."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Masterclass — Galerie | A.TIJANIE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Sora", sans-serif;
+        background: #1a2d46;
+        color: #edeff5;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 3rem 1.5rem 6rem;
+        overflow-x: hidden;
+      }
+
+      .retour {
+        align-self: flex-start;
+        max-width: 72rem;
+        width: 100%;
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #8ecae6;
+        text-decoration: none;
+      }
+
+      .retour:hover {
+        text-decoration: underline;
+      }
+
+      .en-tete {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      h1 {
+        font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+        font-weight: 800;
+        color: #219ebc;
+      }
+
+      .sous-titre {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: #edeff5bb;
+      }
+
+      .galerie {
+        position: relative;
+        width: 100%;
+        max-width: 72rem;
+        height: 78vh;
+        min-height: 540px;
+        margin-top: 2rem;
+      }
+
+      @property --angle {
+        syntax: "<angle>";
+        initial-value: 0deg;
+        inherits: false;
+      }
+
+      @keyframes contour-tourne {
+        to {
+          --angle: 360deg;
+        }
+      }
+
+      .polaroid {
+        position: absolute;
+        width: 160px;
+        cursor: pointer;
+        rotate: var(--rot, 0deg);
+        animation:
+          flotte var(--duree, 5s) ease-in-out var(--delai, 0s) infinite,
+          contour-tourne 4s linear infinite;
+      }
+
+      .cadre {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        overflow: hidden;
+        background:
+          linear-gradient(#1a2d46, #1a2d46) padding-box,
+          conic-gradient(
+            from var(--angle),
+            #219ebc,
+            #8ecae6,
+            #fb8500,
+            #ffb703,
+            #219ebc
+          )
+            border-box;
+        transition: scale 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .polaroid:hover .cadre,
+      .polaroid:focus-visible .cadre {
+        scale: 1.06;
+        box-shadow: 0 16px 40px rgb(0 0 0 / 55%);
+        z-index: 5;
+      }
+
+      .polaroid:focus-visible .cadre {
+        outline: 3px solid #8ecae6;
+        outline-offset: 3px;
+      }
+
+      .cadre img,
+      .cadre video {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background: #0a0a14;
+      }
+
+      .legende {
+        display: block;
+        margin-top: 8px;
+        text-align: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        color: #8ecae6;
+        text-shadow: 0 1px 4px rgb(0 0 0 / 50%);
+      }
+
+      .polaroid.video .cadre::after {
+        content: "▶";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: rgb(10 10 20 / 65%);
+        color: #fff;
+        font-size: 1rem;
+        pointer-events: none;
+      }
+
+      @keyframes flotte {
+        0%,
+        100% {
+          translate: 0 0;
+        }
+        50% {
+          translate: 0 -12px;
+        }
+      }
+
+      .visionneuse {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: grid;
+        place-items: center;
+        background: rgb(5 8 15 / 88%);
+        backdrop-filter: blur(6px);
+        padding: 1.5rem;
+      }
+
+      .visionneuse[hidden] {
+        display: none;
+      }
+
+      .visionneuse-contenu {
+        max-width: min(92vw, 1100px);
+        max-height: 88vh;
+      }
+
+      .visionneuse-contenu img,
+      .visionneuse-contenu video {
+        display: block;
+        max-width: 100%;
+        max-height: 88vh;
+        border-radius: 10px;
+        box-shadow: 0 24px 60px rgb(0 0 0 / 60%);
+        background: #000;
+      }
+
+      .fermer {
+        position: fixed;
+        top: 1.25rem;
+        right: 1.5rem;
+        width: 44px;
+        height: 44px;
+        border: none;
+        border-radius: 50%;
+        background: #fb8500;
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .fermer:hover {
+        background: #ff6b00;
+      }
+
+      @media (max-width: 720px) {
+        .galerie {
+          height: auto;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 1.25rem;
+        }
+
+        .polaroid {
+          position: relative;
+          left: auto !important;
+          top: auto !important;
+          width: 42vw;
+          max-width: 180px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .polaroid {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="retour" href="/#portfolio">← Retour au portfolio</a>
+
+    <header class="en-tete">
+      <h1>Masterclass</h1>
+      <p class="sous-titre">
+        Captation et montage d'une masterclass — rythme et étalonnage
+      </p>
+    </header>
+
+    <main class="galerie" id="galerie">
+      <figure
+        class="polaroid"
+        tabindex="0"
+        role="button"
+        aria-label="Ouvrir la photo M1"
+        data-src="/Masterclass/M1.jpg"
+        data-type="image"
+        style="left: 4%; top: 5%; --rot: -6deg; --duree: 5.2s; --delai: 0.3s"
+      >
+        <div class="cadre"><img src="/Masterclass/M1.jpg" alt="Photo M1" loading="lazy" /></div>
+        <figcaption class="legende">M1</figcaption>
+      </figure>
+
+      <figure
+        class="polaroid"
+        tabindex="0"
+        role="button"
+        aria-label="Ouvrir la photo M2"
+        data-src="/Masterclass/M2.jpg"
+        data-type="image"
+        style="left: 27%; top: 2%; --rot: 4deg; --duree: 6.1s; --delai: 1.2s"
+      >
+        <div class="cadre"><img src="/Masterclass/M2.jpg" alt="Photo M2" loading="lazy" /></div>
+        <figcaption class="legende">M2</figcaption>
+      </figure>
+
+      <figure
+        class="polaroid"
+        tabindex="0"
+        role="button"
+        aria-label="Ouvrir le visuel 5"
+        data-src="/Masterclass/Visuel%205.jpg"
+        data-type="image"
+        style="left: 49%; top: 8%; --rot: -3deg; --duree: 4.6s; --delai: 0.8s"
+      >
+        <div class="cadre"><img src="/Masterclass/Visuel%205.jpg" alt="Visuel 5" loading="lazy" /></div>
+        <figcaption class="legende">Visuel 5</figcaption>
+      </figure>
+
+      <figure
+        class="polaroid"
+        tabindex="0"
+        role="button"
+        aria-label="Ouvrir la photo M3"
+        data-src="/Masterclass/M3.jpg"
+        data-type="image"
+        style="left: 72%; top: 4%; --rot: 7deg; --duree: 5.7s; --delai: 2s"
+      >
+        <div class="cadre"><img src="/Masterclass/M3.jpg" alt="Photo M3" loading="lazy" /></div>
+        <figcaption class="legende">M3</figcaption>
+      </figure>
+
+      <figure
+        class="polaroid"
+        tabindex="0"
+        role="button"
+        aria-label="Ouvrir la photo M4"
+        data-src="/Masterclass/M4.jpg"
+        data-type="image"
+        style="left: 9%; top: 42%; --rot: 5deg; --duree: 6.4s; --delai: 1.6s"
+      >
+        <div class="cadre"><img src="/Masterclass/M4.jpg" alt="Photo M4" loading="lazy" /></div>
+        <figcaption class="legende">M4</figcaption>
+      </figure>
+
+      <figure
+        class="polaroid"
+        tabindex="0"
+        role="button"
+        aria-label="Ouvrir le visuel 6"
+        data-src="/Masterclass/Visuel%206.jpg"
+        data-type="image"
+        style="left: 34%; top: 38%; --rot: -7deg; --duree: 4.9s; --delai: 0.5s"
+      >
+        <div class="cadre"><img src="/Masterclass/Visuel%206.jpg" alt="Visuel 6" loading="lazy" /></div>
+        <figcaption class="legende">Visuel 6</figcaption>
+      </figure>
+
+      <figure
+        class="polaroid video"
+        tabindex="0"
+        role="button"
+        aria-label="Ouvrir la vidéo Motion"
+        data-src="/Masterclass/Motion%201.mp4"
+        data-type="video"
+        style="left: 59%; top: 40%; --rot: 3deg; --duree: 5.5s; --delai: 2.4s"
+      >
+        <div class="cadre">
+          <video
+            src="/Masterclass/Motion%201.mp4"
+            muted
+            loop
+            playsinline
+            autoplay
+            preload="metadata"
+          ></video>
+        </div>
+        <figcaption class="legende">Motion</figcaption>
+      </figure>
+
+      <figure
+        class="polaroid"
+        tabindex="0"
+        role="button"
+        aria-label="Ouvrir la photo M5"
+        data-src="/Masterclass/M5.jpg"
+        data-type="image"
+        style="left: 82%; top: 36%; --rot: -4deg; --duree: 6.8s; --delai: 1s"
+      >
+        <div class="cadre"><img src="/Masterclass/M5.jpg" alt="Photo M5" loading="lazy" /></div>
+        <figcaption class="legende">M5</figcaption>
+      </figure>
+
+    </main>
+
+    <div class="visionneuse" id="visionneuse" hidden>
+      <button class="fermer" id="fermer" aria-label="Fermer">✕</button>
+      <div class="visionneuse-contenu" id="visionneuse-contenu"></div>
+    </div>
+
+    <script>
+      const galerie = document.getElementById("galerie");
+      const visionneuse = document.getElementById("visionneuse");
+      const contenu = document.getElementById("visionneuse-contenu");
+      const boutonFermer = document.getElementById("fermer");
+      let videoOuverte = null;
+
+      function ouvrir(src, type) {
+        contenu.replaceChildren();
+        if (type === "video") {
+          const video = document.createElement("video");
+          video.src = src;
+          video.controls = true;
+          video.autoplay = true;
+          video.playsInline = true;
+          contenu.append(video);
+          videoOuverte = video;
+        } else {
+          const image = document.createElement("img");
+          image.src = src;
+          image.alt = "";
+          contenu.append(image);
+        }
+        visionneuse.hidden = false;
+        document.body.style.overflow = "hidden";
+      }
+
+      function fermer() {
+        visionneuse.hidden = true;
+        document.body.style.overflow = "";
+        if (videoOuverte) {
+          videoOuverte.pause();
+          videoOuverte = null;
+        }
+        contenu.replaceChildren();
+      }
+
+      galerie.addEventListener("click", (event) => {
+        const polaroid = event.target.closest(".polaroid");
+        if (polaroid) {
+          ouvrir(polaroid.dataset.src, polaroid.dataset.type);
+        }
+      });
+
+      galerie.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") {
+          return;
+        }
+        const polaroid = event.target.closest(".polaroid");
+        if (polaroid) {
+          event.preventDefault();
+          ouvrir(polaroid.dataset.src, polaroid.dataset.type);
+        }
+      });
+
+      boutonFermer.addEventListener("click", fermer);
+      visionneuse.addEventListener("click", (event) => {
+        if (event.target === visionneuse) {
+          fermer();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !visionneuse.hidden) {
+          fermer();
+        }
+      });
+    </script>
+  </body>
+</html>

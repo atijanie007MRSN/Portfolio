@@ -1,5 +1,6 @@
 import {
   copyFileSync,
+  existsSync,
   mkdirSync,
   readdirSync,
   rmSync,
@@ -11,8 +12,21 @@ import { fileURLToPath } from "node:url";
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outputDirectory = resolve(projectRoot, "dist");
 const optimizedVideo = join(projectRoot, "cloudflare-assets", "Semaine pro.mp4");
+const optimizedMorrocco = join(projectRoot, "cloudflare-assets", "Morrocco.mp4");
 const maxAssetSize = 25 * 1024 * 1024;
-const publicExtensions = new Set([".css", ".html", ".js", ".mp4", ".pdf", ".png", ".svg"]);
+const publicExtensions = new Set([
+  ".css",
+  ".docx",
+  ".html",
+  ".jpeg",
+  ".jpg",
+  ".js",
+  ".mp4",
+  ".pdf",
+  ".png",
+  ".svg",
+  ".xlsx",
+]);
 const relativeOutput = relative(projectRoot, outputDirectory);
 
 if (!relativeOutput || relativeOutput.startsWith(`..${sep}`)) {
@@ -36,6 +50,7 @@ for (const entry of readdirSync(projectRoot, { withFileTypes: true })) {
   if (
     !entry.isFile() ||
     entry.name === "Semaine pro.mp4" ||
+    entry.name === "Morrocco.mp4" ||
     !publicExtensions.has(extname(entry.name).toLowerCase())
   ) {
     continue;
@@ -54,9 +69,29 @@ for (const entry of readdirSync(join(projectRoot, "assets"), { withFileTypes: tr
   copyPublicFile(source, join(outputDirectory, "assets", entry.name));
 }
 
+const mediaDirectory = join(projectRoot, "Masterclass");
+if (existsSync(mediaDirectory)) {
+  mkdirSync(join(outputDirectory, "Masterclass"), { recursive: true });
+  for (const entry of readdirSync(mediaDirectory, { withFileTypes: true })) {
+    if (!entry.isFile() || !publicExtensions.has(extname(entry.name).toLowerCase())) {
+      continue;
+    }
+
+    copyPublicFile(
+      join(mediaDirectory, entry.name),
+      join(outputDirectory, "Masterclass", entry.name),
+    );
+  }
+}
+
 copyPublicFile(
   optimizedVideo,
   join(outputDirectory, "Semaine pro.mp4"),
+);
+
+copyPublicFile(
+  optimizedMorrocco,
+  join(outputDirectory, "Morrocco.mp4"),
 );
 
 const fileCount = readdirSync(outputDirectory, { recursive: true }).filter((entry) =>

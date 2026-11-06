@@ -6,3 +6,7 @@ site-netlify-a-deposer/
 Thumbs.db
 dist/
 cloudflare-pages-upload.zip
+/Morrocco.mp4
+*.bak
+desktop.ini
+tmp-*.mjs

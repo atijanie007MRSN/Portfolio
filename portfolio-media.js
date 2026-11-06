@@ -1,8 +1,25 @@
-function initialiserApercuSemainePro(conteneurPortfolio) {
-  const cartes = conteneurPortfolio.querySelectorAll("article");
-  const carte = [...cartes].find(
-    (element) => element.querySelector("h3")?.textContent.trim() === "Semaine pro",
-  );
+const apercusVideoPortfolio = [
+  {
+    titre: "Semaine pro",
+    src: "/semaine-pro-apercu.mp4",
+    etiquette: "Aperçu vidéo de cinq secondes du projet Semaine pro",
+    cle: "semaine-pro",
+  },
+  {
+    titre: "SAAS Comédia",
+    src: "/saas-comedia-apercu.mp4",
+    etiquette: "Aperçu vidéo de cinq secondes du projet SAAS Comédia",
+    cle: "saas-comedia",
+  },
+  {
+    titre: "Masterclass",
+    src: "/masterclass-apercu.mp4",
+    etiquette: "Aperçu vidéo de trois secondes du projet Masterclass",
+    cle: "masterclass",
+  },
+];
+
+function initialiserApercuVideo(carte, apercu) {
   const couverture = carte?.querySelector(":scope > div:first-child");
 
   if (!couverture || couverture.querySelector("video")) {
@@ -10,17 +27,17 @@ function initialiserApercuSemainePro(conteneurPortfolio) {
   }
 
   const video = document.createElement("video");
-  video.src = "/semaine-pro-apercu.mp4";
+  video.src = apercu.src;
   video.autoplay = true;
   video.muted = true;
   video.playsInline = true;
   video.preload = "metadata";
-  video.setAttribute("aria-label", "Aperçu vidéo de cinq secondes du projet Semaine pro");
-  video.dataset.apercu = "semaine-pro";
-  video.className = "apercu-video-semaine-pro";
+  video.setAttribute("aria-label", apercu.etiquette);
+  video.dataset.apercu = apercu.cle;
+  video.className = "apercu-video";
 
   video.addEventListener("error", () => {
-    console.error("Impossible de charger la vidéo du projet Semaine pro.", video.error);
+    console.error(`Impossible de charger la vidéo du projet ${apercu.titre}.`, video.error);
   });
 
   couverture.replaceChildren(video);
@@ -39,7 +56,7 @@ function initialiserApercuSemainePro(conteneurPortfolio) {
 
       observateur.disconnect();
       video.play().catch((erreur) => {
-        console.error("La lecture automatique de l’aperçu Semaine pro a échoué.", erreur);
+        console.error(`La lecture automatique de l’aperçu ${apercu.titre} a échoué.`, erreur);
         video.controls = true;
       });
     },
@@ -49,6 +66,19 @@ function initialiserApercuSemainePro(conteneurPortfolio) {
   observateur.observe(video);
 }
 
+function initialiserApercusVideo(conteneurPortfolio) {
+  const cartes = conteneurPortfolio.querySelectorAll("article");
+
+  for (const apercu of apercusVideoPortfolio) {
+    const carte = [...cartes].find(
+      (element) => element.querySelector("h3")?.textContent.trim() === apercu.titre,
+    );
+    if (carte) {
+      initialiserApercuVideo(carte, apercu);
+    }
+  }
+}
+
 function surveillerPortfolio() {
   const conteneurPortfolio = document.querySelector("#portfolio");
   if (!conteneurPortfolio) {
@@ -56,10 +86,10 @@ function surveillerPortfolio() {
   }
 
   const mutations = new MutationObserver(() =>
-    initialiserApercuSemainePro(conteneurPortfolio),
+    initialiserApercusVideo(conteneurPortfolio),
   );
   mutations.observe(conteneurPortfolio, { childList: true, subtree: true });
-  initialiserApercuSemainePro(conteneurPortfolio);
+  initialiserApercusVideo(conteneurPortfolio);
   return true;
 }
 
@@ -176,10 +206,37 @@ function configurerCompetencesVideo() {
     creerBarre(motion, "Motion design", "Intermédiaire", 60),
     creerBarre(motion, "Étalonnage", "Confirmé", 80),
     creerBarre(strategie, "Gestion de projet", "Intermédiaire", 60),
+    creerBarre(strategie, "Stratégie marketing", "Bien", 70),
+    creerBarre(strategie, "Communication événementielle", "Bien", 70),
   ];
   video.before(...nouvellesCompetences);
   video.remove();
   motion.remove();
+  const competencesHumaines = document.createElement("section");
+  competencesHumaines.className = "competences-humaines";
+  competencesHumaines.setAttribute("aria-labelledby", "titre-competences-humaines");
+
+  const titreCompetencesHumaines = document.createElement("h3");
+  titreCompetencesHumaines.id = "titre-competences-humaines";
+  titreCompetencesHumaines.textContent = "Compétences humaines";
+
+  const listeCompetencesHumaines = document.createElement("ul");
+  listeCompetencesHumaines.className = "liste-competences-humaines";
+  for (const competence of [
+    "Créativité",
+    "Adaptabilité",
+    "Esprit d’équipe",
+    "Sens de l’organisation",
+    "Autonomie",
+    "Écoute active",
+  ]) {
+    const element = document.createElement("li");
+    element.textContent = competence;
+    listeCompetencesHumaines.append(element);
+  }
+
+  competencesHumaines.append(titreCompetencesHumaines, listeCompetencesHumaines);
+  competences.append(competencesHumaines);
   competences.dataset.videoSepare = "true";
 
   const observateur = new IntersectionObserver(
@@ -440,11 +497,6 @@ function ajouterBadgesDclic() {
   titre.className = "dclic-badges-title";
   titre.textContent = "Badges D-Clic";
 
-  const description = document.createElement("p");
-  description.className = "dclic-badges-description";
-  description.textContent =
-    "Marketing numérique — les badges défilent en boucle ; faites-les glisser pour les parcourir, ou cliquez pour les agrandir.";
-
   const piste = document.createElement("div");
   piste.className = "dclic-badges-track";
   piste.tabIndex = 0;
@@ -486,7 +538,7 @@ function ajouterBadgesDclic() {
   copie.inert = true;
   defilement.append(groupe, copie);
   piste.append(defilement);
-  contenu.append(titre, description, piste);
+  contenu.append(titre, piste);
   section.append(contenu);
   competences.insertAdjacentElement("afterend", section);
 

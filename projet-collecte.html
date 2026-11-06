@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1A2D46" />
+    <meta
+      name="description"
+      content="Projet Collecte de fonds — campagne de collecte de dons pour les étudiants non boursiers de la Promo 36 de l'UFR CRAC."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Collecte de fonds — Récit du projet | A.TIJANIE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Sora", sans-serif;
+        background: #1a2d46;
+        color: #edeff5;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 4rem 1.5rem 6rem;
+      }
+
+      .retour {
+        align-self: flex-start;
+        max-width: 52rem;
+        width: 100%;
+        margin-bottom: 2.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #8ecae6;
+        text-decoration: none;
+      }
+
+      .retour:hover {
+        text-decoration: underline;
+      }
+
+      .en-tete {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .visuel {
+        max-width: 26rem;
+        width: 100%;
+        border-radius: 1rem;
+        box-shadow: 0 12px 40px rgb(0 0 0 / 45%);
+        margin-bottom: 2.5rem;
+      }
+
+      h1 {
+        font-family: "Sora", sans-serif;
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 800;
+        color: #219ebc;
+      }
+
+      .sous-titre {
+        margin-top: 0.75rem;
+        font-size: 0.95rem;
+        color: #edeff5bb;
+      }
+
+      .récit {
+        width: 100%;
+        max-width: 52rem;
+        padding: 2rem 2.25rem;
+        border-radius: 1rem;
+        background: #12121e;
+        border: 1px solid #8ecae633;
+        box-shadow: 0 4px 14px rgb(0 0 0 / 35%);
+      }
+
+      .machine {
+        font-size: 0.9rem;
+        line-height: 1.7;
+        color: #edeff5d9;
+        white-space: pre-wrap;
+        min-height: 2em;
+      }
+
+      .machine::after {
+        content: "▌";
+        margin-left: 2px;
+        color: #fb8500;
+        animation: clignote 1s steps(1) infinite;
+      }
+
+      .machine.termine::after {
+        opacity: 0;
+      }
+
+      @keyframes clignote {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .machine::after {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="retour" href="/#portfolio">← Retour au portfolio</a>
+
+    <header class="en-tete">
+      <img
+        class="visuel"
+        src="/Collecte%20de%20Fonds.png"
+        alt="Visuel de la collecte de fonds — Promo 34 Communication UFR CRAC"
+      />
+      <h1>Collecte de fonds</h1>
+      <p class="sous-titre">
+        Campagne de dons au profit des étudiants non boursiers de la Promo 36
+        de l'UFR CRAC
+      </p>
+    </header>
+
+    <main class="récit">
+      <p class="machine" id="texte"></p>
+    </main>
+
+    <script>
+      const texte = `1. Contexte
+La Promo 34 Communication de l'UFR CRAC (Université Gaston Berger) a initié une collecte de fonds au profit des étudiants non boursiers de la Promo 36 de l'UFR CRAC. L'objectif : alléger la charge financière des nouveaux étudiants entrants et poser un acte fort de solidarité entre promotions.
+2. Objectif
+Mobiliser les étudiants, anciens et partenaires de l'UFR CRAC autour d'une campagne de dons transparente et accessible à tous, via un affichage percutant, un QR code et un numéro de contributions (+221 78 018 69 07).
+3. Déroulement de la campagne
+- Conception d'une affiche de sensibilisation (visuel mégaphone, identité de l'UGB, QR code de don)
+- Diffusion de l'affiche sur les canaux de communication de la Promo 34 et en ligne
+- Collecte des contributions pendant le mois de juillet
+4. Résultats
+- 220 000 francs CFA collectés grâce à la générosité des contributeurs
+- Une visibilité réussie de la campagne au sein de l'université
+- Un soutien concret apporté aux étudiants non boursiers de la Promo 36
+5. Leçons et perspectives
+- La simplicité des moyens de paiement (QR code + numéro mobile) a facilité les dons
+- La solidarité inter-promotions est un levier fort d'engagement à l'UFR CRAC
+- Ce format est reproductible pour de futures actions sociales au sein du département`;
+
+      const element = document.getElementById("texte");
+
+      function afficher() {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          element.textContent = texte;
+          element.classList.add("termine");
+          return;
+        }
+
+        let index = 0;
+        const intervalle = window.setInterval(() => {
+          index += 1;
+          element.textContent = texte.slice(0, index);
+          if (index >= texte.length) {
+            window.clearInterval(intervalle);
+            element.classList.add("termine");
+          }
+        }, 15);
+      }
+
+      if ("IntersectionObserver" in window) {
+        const observateur = new IntersectionObserver(
+          (entrees, obs) => {
+            if (entrees.some((entree) => entree.isIntersecting)) {
+              obs.disconnect();
+              afficher();
+            }
+          },
+          { threshold: 0.2 },
+        );
+        observateur.observe(element);
+      } else {
+        afficher();
+      }
+    </script>
+  </body>
+</html>
