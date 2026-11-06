@@ -148,6 +148,8 @@ const outilsCreatifs = [
   { nom: "After Effects", fichier: "adobe-after-effects-cc-icon-4632 - Copie.png" },
   { nom: "DaVinci Resolve", fichier: "davinci_resolve_macos_bigsur_icon_190261.png" },
   { nom: "Figma", fichier: "figma.svg" },
+  { nom: "Mistral AI", fichier: "mistral-ai.svg" },
+  { nom: "Meta Ads", fichier: "Meta_lockup_positive primary_RGB.svg" },
 ];
 
 function ajouterOutilsCreatifs() {
@@ -186,6 +188,8 @@ function ajouterOutilsCreatifs() {
     "outil-icone-bas-gauche",
     "outil-icone-bas-droite",
     "outil-icone-bas-droite",
+    "outil-icone-bas-gauche",
+    "outil-icone-haut-droite",
     "outil-icone-bas-gauche",
   ];
   const conteneurs = new Set();
