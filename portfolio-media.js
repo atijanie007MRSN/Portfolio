@@ -652,6 +652,42 @@ function ajouterBadgesDclic() {
     }
   });
 
+  const visionneuse = document.createElement("div");
+  visionneuse.className = "dclic-lightbox";
+  visionneuse.hidden = true;
+  visionneuse.setAttribute("role", "dialog");
+  visionneuse.setAttribute("aria-modal", "true");
+  visionneuse.setAttribute("aria-label", "Badge D-Clic agrandi");
+
+  const visionneuseImage = document.createElement("img");
+  visionneuseImage.alt = "";
+  visionneuse.append(visionneuseImage);
+  document.body.append(visionneuse);
+
+  const fermerVisionneuse = () => {
+    visionneuse.hidden = true;
+  };
+  visionneuse.addEventListener("click", fermerVisionneuse);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !visionneuse.hidden) {
+      fermerVisionneuse();
+    }
+  });
+
+  piste.addEventListener("click", (event) => {
+    const badge =
+      event.target.closest?.(".dclic-badge") ??
+      document.elementFromPoint(event.clientX, event.clientY)?.closest(".dclic-badge");
+    if (!badge) {
+      return;
+    }
+
+    event.preventDefault();
+    visionneuseImage.src = badge.href;
+    visionneuseImage.alt = badge.querySelector("img")?.alt || "Badge D-Clic";
+    visionneuse.hidden = false;
+  });
+
   return true;
 }
 
