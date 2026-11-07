@@ -438,7 +438,9 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
 #portfolio article:has(img[alt="Aperçu du projet Collecte de fonds"]) > div:first-child,
 #portfolio article:has(img[alt="Aperçu du projet Don de tickets"]) > div:first-child,
 #portfolio article:has(img[alt="Aperçu du projet Octobre Rose"]) > div:first-child,
-#portfolio article:has(img[alt="Aperçu du projet Vlog Morocco"]) > div:first-child {
+#portfolio article:has(img[alt="Aperçu du projet Vlog Morocco"]) > div:first-child,
+#portfolio article:has(img[alt="Aperçu du projet Magazine Coupe du Monde 2026"]) > div:first-child,
+#portfolio article:has(img[alt="Aperçu du projet Modèle de badge RIM ORA"]) > div:first-child {
   background: #0F1B2D !important;
 }
 
@@ -461,6 +463,12 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
 }
 
 #portfolio article:has(img[alt="Aperçu du projet Vlog Morocco"]) img {
+  object-fit: contain !important;
+  padding: 5px 0;
+  animation: logo-radio-flottant 4s ease-in-out infinite;
+}
+
+#portfolio article:has(img[alt="Aperçu du projet Magazine Coupe du Monde 2026"]) img {
   object-fit: contain !important;
   padding: 5px 0;
   animation: logo-radio-flottant 4s ease-in-out infinite;
@@ -500,7 +508,8 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
   #portfolio article:has(img[alt="Aperçu du projet Don de tickets"]) img,
   #portfolio article:has(img[alt="Aperçu du projet Collecte de fonds"]) img,
   #portfolio article:has(img[alt="Aperçu du projet Octobre Rose"]) img,
-  #portfolio article:has(img[alt="Aperçu du projet Vlog Morocco"]) img {
+  #portfolio article:has(img[alt="Aperçu du projet Vlog Morocco"]) img,
+  #portfolio article:has(img[alt="Aperçu du projet Magazine Coupe du Monde 2026"]) img {
     animation: none;
   }
 }
@@ -638,3 +647,50 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
   }
 }
 
+
+@property --angle-cadre {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes contour-tourne-cadre {
+  to {
+    --angle-cadre: 360deg;
+  }
+}
+
+@keyframes flotte-cadre {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.cadre-pola {
+  --fond-cadre: #12121e;
+  border: 1px solid transparent !important;
+  background:
+    linear-gradient(var(--fond-cadre), var(--fond-cadre)) padding-box,
+    conic-gradient(
+        from var(--angle-cadre),
+        #219ebc,
+        #8ecae6,
+        #fb8500,
+        #ffb703,
+        #219ebc
+      )
+      border-box !important;
+  animation:
+    flotte-cadre 5s ease-in-out infinite,
+    contour-tourne-cadre 4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cadre-pola {
+    animation: none;
+  }
+}

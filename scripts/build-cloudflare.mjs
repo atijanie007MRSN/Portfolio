@@ -94,6 +94,11 @@ copyPublicFile(
   join(outputDirectory, "Morrocco.mp4"),
 );
 
+const headersFile = join(projectRoot, "_headers");
+if (existsSync(headersFile)) {
+  copyFileSync(headersFile, join(outputDirectory, "_headers"));
+}
+
 const fileCount = readdirSync(outputDirectory, { recursive: true }).filter((entry) =>
   statSync(join(outputDirectory, entry)).isFile(),
 ).length;
