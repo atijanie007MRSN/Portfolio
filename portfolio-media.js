@@ -501,7 +501,7 @@ function ajouterBadgesDclic() {
   piste.className = "dclic-badges-track";
   piste.tabIndex = 0;
   piste.setAttribute("role", "region");
-  piste.setAttribute("aria-label", "Badges D-Clic — défilement horizontal");
+  piste.setAttribute("aria-label", "Badges D-Clic, défilement horizontal");
 
   const defilement = document.createElement("div");
   defilement.className = "dclic-badges-marquee";

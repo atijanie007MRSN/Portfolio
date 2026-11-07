@@ -434,7 +434,7 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
 #portfolio article:has(img[alt="Aperçu du projet A M E C R A C"]) > div:first-child,
 #portfolio article:has(img[alt="Aperçu du projet COMÉDIA (Projet fictif)"]) > div:first-child,
 #portfolio article:has(img[alt="Aperçu du projet Diplômes PMI Sénégal"]) > div:first-child,
-#portfolio article:has(img[alt="Aperçu du projet COMSOLUTION Agency — JOJ 2026"]) > div:first-child,
+#portfolio article:has(img[alt="Aperçu du projet COMSOLUTION Agency · JOJ 2026"]) > div:first-child,
 #portfolio article:has(img[alt="Aperçu du projet Collecte de fonds"]) > div:first-child,
 #portfolio article:has(img[alt="Aperçu du projet Don de tickets"]) > div:first-child,
 #portfolio article:has(img[alt="Aperçu du projet Octobre Rose"]) > div:first-child,
@@ -449,7 +449,7 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
 #portfolio article:has(img[alt="Aperçu du projet A M E C R A C"]) img,
 #portfolio article:has(img[alt="Aperçu du projet COMÉDIA (Projet fictif)"]) img,
 #portfolio article:has(img[alt="Aperçu du projet Diplômes PMI Sénégal"]) img,
-#portfolio article:has(img[alt="Aperçu du projet COMSOLUTION Agency — JOJ 2026"]) img,
+#portfolio article:has(img[alt="Aperçu du projet COMSOLUTION Agency · JOJ 2026"]) img,
 #portfolio article:has(img[alt="Aperçu du projet Collecte de fonds"]) img {
   object-fit: contain !important;
   padding: 5px 0;
@@ -504,7 +504,7 @@ div.rounded-2xl.p-6.space-y-3.shadow-md > p:nth-child(5) > span:first-child::bef
   #portfolio article:has(img[alt="Aperçu du projet COMÉDIA (Projet fictif)"]) img,
   #portfolio article:has(img[alt="Aperçu du projet Diplômes PMI Sénégal"]) img,
   #portfolio article:has(img[alt="Aperçu du projet Modèle de badge RIM ORA"]) img,
-  #portfolio article:has(img[alt="Aperçu du projet COMSOLUTION Agency — JOJ 2026"]) img,
+  #portfolio article:has(img[alt="Aperçu du projet COMSOLUTION Agency · JOJ 2026"]) img,
   #portfolio article:has(img[alt="Aperçu du projet Don de tickets"]) img,
   #portfolio article:has(img[alt="Aperçu du projet Collecte de fonds"]) img,
   #portfolio article:has(img[alt="Aperçu du projet Octobre Rose"]) img,
